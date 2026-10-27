@@ -1,0 +1,772 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Nairobi Airbnb Returns</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: operator's ledger — sticky inputs rail left, collapsible colour-coded sections right; stacks on phones */
+:root{
+  --bg:#f6f5f9; --surface:#ffffff; --sunk:#f0eef5; --ink:#1b1826; --muted:#5d5870; --faint:#8a85a0; --line:#e2dfeb;
+  --accent:#6a4fb3; --accent-soft:#ece6fa;
+  --gain:#2a78d6; --gain-soft:#dbe8f9; --loss:#d03b3b; --loss-soft:#f9e0e0; --warn:#a86a00; --warn-soft:#fbefd6;
+  /* section families */
+  --c-money:#6a4fb3; --c-money-soft:#ece6fa;
+  --c-cost:#b0640c; --c-cost-soft:#fbeedb;
+  --c-demand:#0e7f86; --c-demand-soft:#dcf2f2;
+  --c-path:#b0357a; --c-path-soft:#f9e1ee;
+  --c-risk:#c24e1c; --c-risk-soft:#fbe5da;
+  --c-alt:#3f6b2a; --c-alt-soft:#e5f0dc;
+  --f-display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#14121a; --surface:#1c1924; --sunk:#25212f; --ink:#eeecf4; --muted:#a8a3ba; --faint:#7d7891; --line:#322d40;
+  --accent:#a995e8; --accent-soft:#2c2545; --gain:#3987e5; --gain-soft:#1b2c44; --loss:#e66767; --loss-soft:#3e2024; --warn:#e0a63a; --warn-soft:#3a2d14;
+  --c-money:#a995e8; --c-money-soft:#2c2545; --c-cost:#e8a050; --c-cost-soft:#3a2a16; --c-demand:#4cc3c9; --c-demand-soft:#14343a;
+  --c-path:#e77fb6; --c-path-soft:#3d1c30; --c-risk:#f08a5d; --c-risk-soft:#3d2216; --c-alt:#8fc46f; --c-alt-soft:#22301b; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#14121a; --surface:#1c1924; --sunk:#25212f; --ink:#eeecf4; --muted:#a8a3ba; --faint:#7d7891; --line:#322d40;
+  --accent:#a995e8; --accent-soft:#2c2545; --gain:#3987e5; --gain-soft:#1b2c44; --loss:#e66767; --loss-soft:#3e2024; --warn:#e0a63a; --warn-soft:#3a2d14;
+  --c-money:#a995e8; --c-money-soft:#2c2545; --c-cost:#e8a050; --c-cost-soft:#3a2a16; --c-demand:#4cc3c9; --c-demand-soft:#14343a;
+  --c-path:#e77fb6; --c-path-soft:#3d1c30; --c-risk:#f08a5d; --c-risk-soft:#3d2216; --c-alt:#8fc46f; --c-alt-soft:#22301b; color-scheme:dark }
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);margin:0}
+.byline{max-width:1380px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:14px 0;font-size:.84rem;color:var(--muted);text-align:right}
+.byline a{color:var(--accent);font-weight:600;text-decoration:none}
+.byline a:hover{text-decoration:underline}
+output.calc{display:block;font:600 .92rem var(--f-mono);padding:6px 8px;border-radius:6px;background:var(--accent-soft);color:var(--accent);text-align:right}
+.wrap{display:grid;grid-template-columns:330px minmax(0,1fr);gap:28px;max-width:1380px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px 60px}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h3{font-size:1rem}
+.num,td.n,th.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
+a{color:var(--accent)}
+/* Inputs rail */
+aside{position:sticky;top:max(12px,env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 24px);overflow:auto;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px}
+@media (max-width:900px){aside{position:static;max-height:none;order:2}}
+.rail-head{padding:16px 16px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px;background:var(--accent-soft);border-radius:10px 10px 0 0}
+.rail-head p{margin:0;font-size:.82rem;color:var(--muted)}
+.rail-head input[type=text]{width:100%;font:500 .9rem var(--f-body);padding:7px 9px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.legend-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:.72rem;align-items:center}
+details.grp{border-bottom:1px solid var(--line)}
+details.grp>summary{cursor:pointer;padding:11px 16px;font-family:var(--f-display);font-weight:600;font-size:.95rem;list-style:none;display:flex;justify-content:space-between;gap:8px}
+details.grp>summary::-webkit-details-marker{display:none}
+details.grp>summary::after{content:"+";color:var(--muted)}
+details.grp[open]>summary::after{content:"–"}
+.fields{display:flex;flex-direction:column;gap:10px;padding:0 16px 14px}
+.field{display:grid;grid-template-columns:minmax(0,1fr) 108px;gap:2px 10px;align-items:center}
+.field label{font-size:.84rem;line-height:1.3}
+.field input[type=number],.field select{width:100%;font:500 .9rem var(--f-mono);padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--sunk);color:var(--ink);text-align:right}
+input:focus,select:focus,button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.field .note{grid-column:1/-1;font-size:.73rem;color:var(--faint);line-height:1.35}
+.grp-note{font-size:.76rem;color:var(--muted);margin:0;background:var(--sunk);padding:7px 9px;border-radius:6px}
+.tag{display:inline-block;font-size:.64rem;font-weight:600;letter-spacing:.04em;padding:1px 6px;border-radius:99px;margin-left:4px;vertical-align:1px}
+.t-you{background:var(--accent-soft);color:var(--accent)}
+.t-mkt{background:var(--gain-soft);color:var(--gain)}
+.t-est{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.rail-foot{padding:12px 16px;display:flex;gap:8px}
+button{font:600 .82rem var(--f-body);border:1px solid var(--line);background:var(--sunk);color:var(--ink);border-radius:6px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+/* Main */
+main{display:flex;flex-direction:column;gap:16px;min-width:0}
+.hero{background:var(--accent-soft);border-radius:12px;padding:22px 22px 20px;display:flex;flex-direction:column;gap:6px}
+.hero h1{font-size:clamp(1.7rem,3.6vw,2.5rem);line-height:1.08;color:var(--accent)}
+.hero .sub{font:600 1.1rem var(--f-display);color:var(--ink)}
+.hero .ctx{font-size:.86rem;color:var(--muted)}
+.snap{border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:10px;border:1px solid var(--line);background:var(--surface)}
+.snap .row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.snap .pill{flex:none;font:700 .74rem var(--f-display);letter-spacing:.05em;text-transform:uppercase;padding:5px 10px;border-radius:6px}
+.snap p{margin:0;max-width:80ch}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px;border-top:3px solid var(--kc,var(--line))}
+.kpi .v{font:600 1.4rem var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.kpi .s{font-size:.78rem;color:var(--muted);line-height:1.35}
+.toolbar{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+/* Collapsible sections */
+details.sec{background:var(--surface);border:1px solid var(--line);border-radius:10px;min-width:0;overflow:hidden}
+details.sec>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:4px 12px;align-items:center;padding:14px 16px;border-left:5px solid var(--c);background:linear-gradient(var(--c-soft),var(--c-soft)) left/0 100% no-repeat}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec[open]>summary{background:var(--c-soft);border-bottom:1px solid var(--line)}
+details.sec>summary:hover{background:var(--c-soft)}
+.badge{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font:700 .9rem var(--f-display);background:var(--c);color:var(--surface)}
+.stitle{display:flex;flex-direction:column;min-width:0}
+.stitle .fam{font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--c);font-weight:700}
+.stitle h2{font-size:1.15rem;color:var(--ink)}
+.sline{grid-column:2/3;font:500 .82rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.chev{font:600 1.1rem var(--f-display);color:var(--c);transition:transform .15s}
+details.sec[open] .chev{transform:rotate(90deg)}
+.sbody{padding:16px 18px 18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.why{font-size:.86rem;color:var(--muted);max-width:72ch;margin:0}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.86rem}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-weight:600;color:var(--c,var(--muted));font-size:.73rem;text-transform:uppercase;letter-spacing:.05em}
+td.n,th.n{text-align:right}
+.wrapcols td:not(.n){white-space:normal;min-width:110px}
+.wrapcols td:first-child{min-width:150px}
+#t-scn th{white-space:normal;vertical-align:bottom}
+#t-scn .chip{white-space:normal;text-align:center}
+tr.total td{font-weight:600;border-top:2px solid var(--ink)}
+tr.sub td{color:var(--muted)}
+tr.hl td{background:var(--c-soft)}
+.pos{color:var(--gain)} .neg{color:var(--loss)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.74rem;font-weight:600;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.chip.ok{background:var(--gain-soft);color:var(--gain)} .chip.bad{background:var(--loss-soft);color:var(--loss)} .chip.meh{background:var(--warn-soft);color:var(--warn)}
+.callout{font-size:.86rem;background:var(--c-soft);border-radius:8px;padding:10px 12px;margin:0}
+.callout b{font-weight:600}
+.sbody .kpi{border-top-color:var(--c)}
+svg text{font-family:var(--f-body);fill:var(--muted);font-size:11px}
+svg .val{font-family:var(--f-mono)}
+.chart{position:relative;width:100%;overflow-x:auto}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font:500 .78rem var(--f-mono);padding:6px 8px;border-radius:6px;white-space:nowrap;z-index:5;transform:translate(-50%,-110%)}
+.grid2 td.c{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-size:.8rem}
+.key{display:flex;gap:14px;flex-wrap:wrap;font-size:.78rem;color:var(--muted)}
+.key span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;background:var(--k)}
+.key span.dash::before{height:0;border-top:2px dashed var(--k);background:none;vertical-align:3px}
+ol.src{margin:0;padding-left:18px;font-size:.82rem;color:var(--muted);display:flex;flex-direction:column;gap:3px}
+.f-money{--c:var(--c-money);--c-soft:var(--c-money-soft)}
+.f-cost{--c:var(--c-cost);--c-soft:var(--c-cost-soft)}
+.f-demand{--c:var(--c-demand);--c-soft:var(--c-demand-soft)}
+.f-path{--c:var(--c-path);--c-soft:var(--c-path-soft)}
+.f-risk{--c:var(--c-risk);--c-soft:var(--c-risk-soft)}
+.f-alt{--c:var(--c-alt);--c-soft:var(--c-alt-soft)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="byline">Built by Diana Nyangaga · Like what you see? Let’s talk numbers on <a href="https://www.linkedin.com/in/diana-n-0a16481b2/" target="_blank" rel="noopener">LinkedIn</a></div>
+<div class="wrap">
+<aside aria-label="Inputs">
+  <div class="rail-head">
+    <span class="eyebrow">Inputs</span>
+    <label for="in-unitName" style="font-size:.8rem;font-weight:600">Unit being modelled</label>
+    <input type="text" id="in-unitName" data-k="unitName">
+    <p>Change any figure and the whole page recalculates. Edits stay in this browser only.</p>
+    <div class="legend-tags"><span class="tag t-you">MINE</span>my figure <span class="tag t-mkt">DATA</span>market research <span class="tag t-est">EST</span>estimate, check it</div>
+  </div>
+  <div id="inputs"></div>
+  <div class="rail-foot"><button id="reset" type="button">Reset to defaults</button></div>
+</aside>
+
+<main>
+  <header class="hero">
+    <span class="eyebrow">Short-let planner · KES</span>
+    <h1>So You Want to Run an Airbnb?</h1>
+    <span class="sub">Let’s crunch the numbers.</span>
+    <p style="margin:6px 0 0;max-width:68ch">I wanted to see what it takes to rent a 1-bedroom in Nairobi, run it as an Airbnb, and earn a return that competes with Kenyan bills and bonds. This is the model I built to work it out.</p>
+    <span class="ctx" id="ctx"></span>
+  </header>
+
+  <div class="snap" id="snap"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="toolbar"><button type="button" id="openAll">Expand all</button><button type="button" id="closeAll">Collapse all</button></div>
+
+  <details class="sec f-money" id="sec-start"><summary><span class="badge">1</span><span class="stitle"><span class="fam">Money in</span><h2>What you put in on day one</h2></span><span class="chev">›</span><span class="sline" data-line="start"></span></summary>
+    <div class="sbody"><p class="why">The deposit mostly comes back when you leave. Furniture comes back only as resale value. The reserve is the cushion that pays for slow months.</p>
+    <div class="tbl"><table id="t-start"></table></div></div></details>
+
+  <details class="sec f-cost" id="sec-month"><summary><span class="badge">2</span><span class="stitle"><span class="fam">Running the unit</span><h2>One typical month</h2></span><span class="chev">›</span><span class="sline" data-line="month"></span></summary>
+    <div class="sbody"><p class="why">A settled month with no seasonal swing, at your expected nights and at your maximum.</p>
+    <div class="tbl"><table id="t-month"></table></div></div></details>
+
+  <details class="sec f-demand" id="sec-be"><summary><span class="badge">3</span><span class="stitle"><span class="fam">Break-even</span><h2>The line between profit and loss</h2></span><span class="chev">›</span><span class="sline" data-line="be"></span></summary>
+    <div class="sbody"><div class="kpis" id="be"></div><p class="callout" id="be-note"></p></div></details>
+
+  <details class="sec f-path" id="sec-path"><summary><span class="badge">4</span><span class="stitle"><span class="fam">Targets</span><h2>What it takes, and how much room you have</h2></span><span class="chev">›</span><span class="sline" data-line="path"></span></summary>
+    <div class="sbody"><p class="why">Each row moves one input and holds everything else at your numbers. Where you're already past a target, it shows how far that input can slip before you fall below it.</p>
+    <div class="tbl"><table id="t-path"></table></div><p class="callout" id="path-note"></p></div></details>
+
+  <details class="sec f-demand" id="sec-occ"><summary><span class="badge">5</span><span class="stitle"><span class="fam">Demand</span><h2>Occupancy and length of stay</h2></span><span class="chev">›</span><span class="sline" data-line="occ"></span></summary>
+    <div class="sbody"><p class="why">Profit for one settled month at every level of booked nights, from occasional to fully booked. Longer stays mean fewer cleanings but usually a discount.</p>
+    <div class="key"><span style="--k:var(--gain)">Profit</span><span style="--k:var(--loss)">Loss</span><span class="dash" style="--k:var(--c-demand)">Your expected nights and maximum</span></div>
+    <div class="chart" id="c-occ"></div>
+    <h3>Your stay mix</h3><div class="tbl"><table id="t-mix"></table></div>
+    <h3>Every occupancy level</h3><div class="tbl" style="max-height:340px;overflow:auto"><table id="t-occ"></table></div></div></details>
+
+  <details class="sec f-risk" id="sec-scn"><summary><span class="badge">6</span><span class="stitle"><span class="fam">Scenarios</span><h2>Five ways it could go</h2></span><span class="chev">›</span><span class="sline" data-line="scn"></span></summary>
+    <div class="sbody"><p class="why">Each scenario runs month by month with a slow launch and seasonal swings. If the stop rule fires, the business closes that month, you sell the furniture, collect the deposit and put what's left into the best low-risk option for the rest of the period.</p>
+    <div class="tbl"><table id="t-scn"></table></div></div></details>
+
+  <details class="sec f-risk" id="sec-run"><summary><span class="badge">7</span><span class="stitle"><span class="fam">Runway and stop rule</span><h2>Cash in the business, month by month</h2></span><span class="chev">›</span><span class="sline" data-line="run"></span></summary>
+    <div class="sbody"><p class="why">Starts with your reserve. The stop rule closes the business when cash falls below the floor or losses run too many months in a row.</p>
+    <div class="key"><span style="--k:var(--c-risk)">Cash, following your stop rule</span><span class="dash" style="--k:var(--faint)">If you kept going</span><span class="dash" style="--k:var(--loss)">Stop floor</span></div>
+    <div class="chart" id="c-cash"></div><p class="callout" id="run-note"></p></div></details>
+
+  <details class="sec f-alt" id="sec-ret"><summary><span class="badge">8</span><span class="stitle"><span class="fam">Same money elsewhere</span><h2>Compared with other investments in Kenya</h2></span><span class="chev">›</span><span class="sline" data-line="ret"></span></summary>
+    <div class="sbody"><p class="why">Each option gets the full amount you'd commit (setup, deposit, first rent and reserve). Rates as of October 2026, after Kenyan withholding tax. Grey bars are higher-risk and don't set your hurdle.</p>
+    <h3>Gain or loss after the full period</h3>
+    <div class="chart" id="c-ret"></div>
+    <div class="tbl"><table id="t-bench" class="wrapcols"></table></div>
+    <div class="tbl"><table id="t-ret"></table></div></div></details>
+
+  <details class="sec f-path" id="sec-sens"><summary><span class="badge">9</span><span class="stitle"><span class="fam">Sensitivity</span><h2>Which number matters most</h2></span><span class="chev">›</span><span class="sline" data-line="sens"></span></summary>
+    <div class="sbody"><p class="why">Each bar moves one input 20% down and 20% up, holding the rest, and shows the change in profit or loss over the full period if the business keeps running.</p>
+    <div class="key"><span style="--k:var(--c-cost)">Input 20% lower</span><span style="--k:var(--c-demand)">Input 20% higher</span></div>
+    <div class="chart" id="c-tor"></div>
+    <h3>Monthly profit by nightly rate and booked nights</h3>
+    <div class="tbl grid2"><table id="t-grid"></table></div></div></details>
+
+
+</main>
+</div>
+<div class="tip" id="tip" hidden></div>
+<script>
+// ===== Calculation engine (pure functions) =====
+const SEASON_RAW = [1.10, 1.00, 0.95, 0.80, 0.75, 0.95, 1.15, 1.15, 1.00, 0.95, 0.85, 1.25];
+const SEASON_AVG = SEASON_RAW.reduce((a, b) => a + b, 0) / 12;
+const SEASON = SEASON_RAW.map(v => v / SEASON_AVG);
+const SAFE_KEYS = [["mmf","Money market fund"],["fd","Bank fixed deposit"],["tbill","364-day T-bill"],["tbond","Treasury bond"],["sacco","SACCO deposits"]];
+
+// Length-of-stay mix: share of bookings, average nights, discount off the listed nightly rate
+function mix(p) {
+  const bands = [
+    { name: "1–2 nights", s: p.sh1, L: p.len1, d: 0 },
+    { name: "3–6 nights", s: p.sh2, L: p.len2, d: p.disc2 },
+    { name: "7–29 nights", s: p.sh3, L: p.len3, d: p.disc3 },
+    { name: "30+ nights", s: p.sh4, L: p.len4, d: p.disc4 },
+  ];
+  const tot = bands.reduce((a, b) => a + Math.max(0, b.s), 0) || 1;
+  let avg = 0;
+  bands.forEach(b => { b.w = Math.max(0, b.s) / tot; b.L = Math.max(1, b.L); avg += b.w * b.L; });
+  let factor = 0;
+  bands.forEach(b => { b.nightShare = b.w * b.L / avg; factor += b.nightShare * (1 - b.d / 100); });
+  const directCut = (Math.min(100, Math.max(0, p.direct || 0)) / 100) * ((p.directDisc || 0) / 100); // direct guests get a discount
+  return { avgStay: avg, factor: factor * (1 - directCut), stayFactor: factor, directCut, bands };
+}
+function deductRate(p) {
+  const share = Math.min(100, Math.max(0, p.airShare)) / 100;
+  const direct = Math.min(100, Math.max(0, p.direct)) / 100;
+  const platform = (1 - direct) * (share * p.airFee + (1 - share) * p.bookFee);
+  const tax = p.taxBasis === 1 ? 0 : p.tax; // taxed on profit instead: handled in monthPL
+  return { platform: platform / 100, levy: p.levy / 100, tax: tax / 100, total: (platform + p.levy + tax) / 100 };
+}
+function fixedMonthly(p) { return p.rent + p.wifi + p.water + p.elecBase + p.repairs + p.licence / 12; }
+function contributionPerNight(p, adr) {
+  const m = mix(p), d = deductRate(p).total, eff = (adr == null ? p.adr : adr) * m.factor;
+  return eff * (1 - d) + (p.cleanFee * (1 - d) - p.cleanCost) / m.avgStay - p.supplies - p.elecNight;
+}
+function monthPL(p, n, adr) {
+  const m = mix(p), dr = deductRate(p);
+  const listed = adr == null ? p.adr : adr, eff = listed * m.factor;
+  const stays = n / m.avgStay;
+  const nightRev = n * eff, cleanRev = stays * p.cleanFee, gross = nightRev + cleanRev;
+  const platform = gross * dr.platform, levy = gross * dr.levy, tax = gross * dr.tax;
+  const cleaning = stays * p.cleanCost, supplies = n * p.supplies, elec = p.elecBase + n * p.elecNight;
+  const costs = cleaning + supplies + elec + p.rent + p.wifi + p.water + p.repairs + p.licence / 12;
+  let tax2 = tax;
+  if (p.taxBasis === 1) tax2 = Math.max(0, gross - platform - levy - costs) * p.taxProfit / 100;
+  const profit = gross - platform - levy - tax2 - costs;
+  const time = p.hourVal * (p.hrsFixed + p.hrsStay * stays);
+  return { n, listed, eff, stays, nightRev, cleanRev, gross, platform, levy, tax: tax2, net: gross - platform - levy - tax2,
+           cleaning, supplies, elec, rent: p.rent, wifi: p.wifi, water: p.water, repairs: p.repairs, licence: p.licence / 12,
+           costs, profit, time, profitAfterTime: profit - time };
+}
+function breakEvenNights(p, adr) { const c = contributionPerNight(p, adr); return c <= 0 ? Infinity : fixedMonthly(p) / c; }
+function breakEvenRate(p, n) {
+  if (n <= 0) return Infinity;
+  const m = mix(p), d = deductRate(p).total;
+  const other = (p.cleanFee * (1 - d) - p.cleanCost) / m.avgStay - p.supplies - p.elecNight;
+  return (fixedMonthly(p) / n - other) / (1 - d) / m.factor;
+}
+function npvMonthly(flows, r) { let v = 0; for (let t = 0; t < flows.length; t++) v += flows[t] / Math.pow(1 + r, t); return v; }
+function irrAnnual(flows) {
+  const f = r => npvMonthly(flows, r);
+  let lo = -0.5, prev = f(lo), hi = null;
+  for (let r = -0.49; r <= 1.0001; r += 0.01) { const v = f(r); if ((prev <= 0 && v >= 0) || (prev >= 0 && v <= 0)) { hi = r; break; } lo = r; prev = v; }
+  if (hi == null) return f(1.0) > 0 ? 99 : null; // above the search range: a very high return, not a loss
+  for (let i = 0; i < 80; i++) { const mid = (lo + hi) / 2; if ((f(lo) <= 0) === (f(mid) <= 0)) lo = mid; else hi = mid; }
+  return Math.pow(1 + (lo + hi) / 2, 12) - 1;
+}
+function bestSafe(p) {
+  let best = { key: "mmf", label: "Money market fund", rate: -Infinity };
+  SAFE_KEYS.forEach(([k, l]) => { if (p[k] > best.rate) best = { key: k, label: l, rate: p[k] }; });
+  return best;
+}
+// Month-by-month run. By default the business closes in the month the stop rule fires.
+function simulate(p, opts) {
+  const ignoreStop = opts && opts.ignoreStop;
+  const N = Math.max(1, Math.round(p.years * 12));
+  const deposit = p.depMonths * p.rent;
+  const invest = p.furnish + deposit;
+  const exitValue = p.furnish * p.salvage / 100 + deposit * p.depRefund / 100;
+  const committed = invest + p.rent + p.reserve;
+  const floor = p.killRent * (p.floorBasis === 1 ? fixedMonthly(p) : p.rent);
+  const safe = bestSafe(p);
+  const months = [];
+  let earned = 0;
+  let cash = p.reserve + p.rent, cum = 0, killMonth = null, outMonth = null, lossRun = 0, closedAt = null;
+  const flows = [-invest], flowsTime = [-invest];
+  for (let i = 1; i <= N; i++) {
+    const cal = (p.startMonth - 1 + i - 1) % 12;
+    const s = p.seasonal ? SEASON[cal] : 1;
+    const ramp = i <= p.ramp ? i / (p.ramp + 1) : 1;
+    const nights = Math.min(p.cap, p.nights * s * ramp);
+    const pl = monthPL(p, nights);
+    const interest = p.cashYield && cash > 0 ? cash * (Math.pow(1 + p.mmf / 100, 1 / 12) - 1) : 0; // idle cash kept in a money market fund
+    cash += pl.profit + interest; cum += pl.profit; earned += interest;
+    if (i > p.ramp) lossRun = pl.profit < 0 ? lossRun + 1 : 0;
+    if (outMonth == null && cash < 0) outMonth = i;
+    if (killMonth == null && (cash < floor || (p.killMonths > 0 && lossRun >= p.killMonths))) killMonth = i;
+    const closing = (!ignoreStop && killMonth === i) || i === N;
+    flows.push(pl.profit + (closing ? exitValue : 0));
+    flowsTime.push(pl.profit - pl.time + (closing ? exitValue : 0));
+    months.push({ i, cal, nights, gross: pl.gross, op: pl.profit, time: pl.time, cash });
+    if (closing) { closedAt = i; break; }
+  }
+  const run = months.length;
+  const result = cum + exitValue - invest; // operating result, excludes interest on idle cash
+  const irr = irrAnnual(flows), irrTime = irrAnnual(flowsTime);
+  const required = (safe.rate + p.riskPrem) / 100;
+  const npv = npvMonthly(flows, Math.pow(1 + required, 1 / 12) - 1);
+  const leftover = cash + exitValue; // what you walk away with when it closes
+  const endWealth = leftover * Math.pow(1 + safe.rate / 100, (N - run) / 12); // then parked in the best low-risk option
+  const altWealth = committed * Math.pow(1 + safe.rate / 100, p.years);
+  return { earned, N, run, closedEarly: run < N, months, invest, deposit, exitValue, committed, floor, safe, totalOp: cum, result,
+           irr, irrTime, npv, required, leftover, endWealth, altWealth, killMonth, outMonth,
+           hours: months.reduce((a, m) => a + p.hrsFixed + p.hrsStay * m.nights / mix(p).avgStay, 0),
+           avgNights: months.reduce((a, m) => a + m.nights, 0) / run, dr: deductRate(p) };
+}
+// Find the value of one input that reaches a target. dir = +1 if raising the input helps.
+function solveLever(fn, lo, hi, dir) {
+  const ok = x => fn(x);
+  const best = dir > 0 ? hi : lo, worst = dir > 0 ? lo : hi;
+  if (!ok(best)) return null;
+  if (ok(worst)) return worst;
+  let a = worst, b = best;
+  for (let i = 0; i < 50; i++) { const m = (a + b) / 2; if (ok(m)) b = m; else a = m; }
+  return b;
+}
+
+
+</script>
+<script>
+// ===== Inputs =====
+const INPUTS = [
+  { g: "Pricing and demand", items: [
+    { k: "rent", l: "Monthly rent", v: 35000, t: "you", step: 1000, n: "A slightly better-located 1-bedroom." },
+    { k: "priceRatio", l: "Nightly rate as % of monthly rent", v: 10, t: "you", step: 0.5, n: "Local 1-bedrooms on KES 30,000 rent charge about 2,500–3,000 a night (8–10%). A pricier unit in a better location can charge more." },
+    { k: "adr", l: "Nightly rate", t: "you", type: "out", n: "Calculated: rent × percentage." },
+    { k: "nights", l: "Average booked nights / month", v: 25, t: "est", step: 1, n: "Illustrative assumption for a well-run, well-reviewed listing (83%). For reference, the published Nairobi median is 44%, about 13 nights." },
+    { k: "cap", l: "Maximum booked nights / month", v: 30, t: "est", step: 1, n: "A fully booked month." },
+    { k: "localLow", l: "Local price range: low", v: 2500, t: "you", step: 100, n: "Used in the Lower price scenario." },
+    { k: "localHigh", l: "Local price range: high", v: 3500, t: "you", step: 100 },
+    { k: "cleanFee", l: "Cleaning fee charged per stay", v: 600, t: "you", step: 100, n: "Charged to the guest; the cleaner costs 500 (below)." },
+  ]},
+  { g: "Length of stay mix", note: "Share of bookings in each band. Shares don't need to add to 100; they are scaled.", items: [
+    { k: "sh1", l: "1–2 night stays (% of bookings)", v: 50, t: "est", step: 5 },
+    { k: "len1", l: "…average nights", v: 1.5, t: "est", step: 0.5 },
+    { k: "sh2", l: "3–6 night stays (%)", v: 35, t: "est", step: 5 },
+    { k: "len2", l: "…average nights", v: 4, t: "est", step: 0.5 },
+    { k: "disc2", l: "…discount off nightly rate (%)", v: 0, t: "est", step: 5 },
+    { k: "sh3", l: "7–29 night stays (%)", v: 12, t: "est", step: 5 },
+    { k: "len3", l: "…average nights", v: 10, t: "est", step: 1 },
+    { k: "disc3", l: "…weekly discount (%)", v: 5, t: "est", step: 5 },
+    { k: "sh4", l: "30+ night stays (%)", v: 3, t: "est", step: 1 },
+    { k: "len4", l: "…average nights", v: 30, t: "est", step: 1 },
+    { k: "disc4", l: "…monthly discount (%)", v: 15, t: "est", step: 5, n: "Published Nairobi 1-bedroom average stay is 8.5 nights. This default mix gives about 4." },
+  ]},
+  { g: "Platforms, levy and tax", items: [
+    { k: "airShare", l: "Airbnb share of platform bookings (%)", v: 70, t: "est", step: 5, n: "The rest come from Booking.com." },
+    { k: "direct", l: "Direct bookings, no platform fee (%)", v: 10, t: "est", step: 5, n: "Repeat and referral guests who book by WhatsApp or phone." },
+    { k: "directDisc", l: "…discount for direct guests (%)", v: 5, t: "est", step: 1, n: "Passing on part of the platform fee you save." },
+    { k: "airFee", l: "Airbnb host fee (%)", v: 15.5, t: "mkt", step: 0.5, n: "Single host-only fee since late 2025." },
+    { k: "bookFee", l: "Booking.com commission (%)", v: 15, t: "mkt", step: 0.5 },
+    { k: "levy", l: "Tourism levy (%)", v: 2, t: "mkt", step: 0.5, n: "Applies to short-term rentals from June 2026." },
+    { k: "taxBasis", l: "Income tax is charged on", v: 0, t: "mkt", type: "taxb", n: "Airbnb's Kenya tax guide: hosts with KES 288,000–15M a year in rental income pay Monthly Rental Income tax, 7.5% of gross, as a final tax. Hosts who opt out pay normal income tax on profit." },
+    { k: "taxProfit", l: "…rate on profit (%)", v: 30, t: "est", step: 2.5, n: "Used only if tax is charged on profit." },
+    { k: "tax", l: "…rate on gross bookings (%)", v: 7.5, t: "mkt", step: 0.5, n: "Monthly Rental Income tax since January 2024." },
+  ]},
+  { g: "Monthly running costs", items: [
+    { k: "wifi", l: "Wi-Fi", v: 3000, t: "you", step: 500 },
+    { k: "water", l: "Water", v: 1000, t: "you", step: 500 },
+    { k: "elecBase", l: "Electricity, empty month", v: 1000, t: "est", step: 250 },
+    { k: "elecNight", l: "Electricity per booked night", v: 150, t: "est", step: 25, n: "With the base, about 4,000 a month at 20 nights." },
+    { k: "supplies", l: "Supplies per booked night", v: 250, t: "est", step: 25, n: "About 5,000 a month at 20 nights." },
+    { k: "cleanCost", l: "Cleaning cost per changeover", v: 500, t: "you", step: 100 },
+    { k: "repairs", l: "Repairs and replacements / month", v: 1500, t: "est", step: 500 },
+    { k: "licence", l: "Licences and permits / year", v: 15000, t: "est", step: 1000, n: "Tourism Regulatory Authority and county permit. Confirm the fees." },
+  ]},
+  { g: "Money in and exit", items: [
+    { k: "furnish", l: "Furnishing and setup", v: 250000, t: "you", step: 10000 },
+    { k: "depMonths", l: "Deposit (months of rent)", v: 2, t: "you", step: 1 },
+    { k: "reserve", l: "Cash reserve", v: 100000, t: "you", step: 10000, n: "Pays for slow months." },
+    { k: "years", l: "Period to evaluate (years)", v: 3, t: "est", step: 1 },
+    { k: "salvage", l: "Furniture resale at exit (%)", v: 30, t: "est", step: 5 },
+    { k: "depRefund", l: "Deposit refunded at exit (%)", v: 70, t: "you", step: 5, n: "Landlord keeps about 30% for repairs." },
+    { k: "ramp", l: "Slow months at launch", v: 2, t: "est", step: 1, n: "No reviews yet: month 1 at 1/3, month 2 at 2/3 of expected bookings." },
+    { k: "seasonal", l: "Seasonal swings", v: 1, t: "est", type: "yn" },
+    { k: "cashYield", l: "Keep idle cash in a money market fund", v: 1, t: "est", type: "yn", n: "Reserve and profits earn the money market rate while they sit." },
+    { k: "startMonth", l: "Launch month", v: 1, t: "you", type: "month" },
+    { k: "startYear", l: "Launch year", v: 2027, t: "you", step: 1 },
+  ]},
+  { g: "Stop rule", items: [
+    { k: "killRent", l: "Close when cash covers less than (months)", v: 1, t: "you", step: 0.5 },
+    { k: "floorBasis", l: "…months of", v: 0, t: "you", type: "basis", n: "At 1 month of rent, you close while you can still pay the final month." },
+    { k: "killMonths", l: "…or after this many losing months in a row", v: 3, t: "est", step: 1, n: "Counted after the launch months. Set 0 to use the cash floor only." },
+  ]},
+  { g: "Your time", items: [
+    { k: "hrsFixed", l: "Hours / month, fixed", v: 8, t: "est", step: 1 },
+    { k: "hrsStay", l: "Hours per stay", v: 2, t: "est", step: 0.5 },
+    { k: "hourVal", l: "Value of one hour (KES)", v: 0, t: "you", step: 50, n: "Set to 0: the time is unpaid." },
+  ]},
+  { g: "Other investments in Kenya (after-tax %)", items: [
+    { k: "mmf", l: "Money market fund", v: 7.9, t: "mkt", step: 0.1, n: "Average 9.3% before 15% tax (Oct 2026)." },
+    { k: "fd", l: "Bank fixed deposit, 12 months", v: 7.3, t: "mkt", step: 0.1, n: "Best 8.5–8.6% before tax." },
+    { k: "tbill", l: "364-day Treasury bill", v: 7.68, t: "mkt", step: 0.1, n: "9.04% before tax." },
+    { k: "tbond", l: "Treasury bond", v: 11.7, t: "mkt", step: 0.1, n: "About 13% before 10% tax." },
+    { k: "ifb", l: "Infrastructure bond", v: 12.5, t: "mkt", step: 0.1, n: "12.2–13.1%, tax-free. Shown for reference; less common for individual investors." },
+    { k: "sacco", l: "SACCO deposits", v: 10, t: "est", step: 0.5, n: "Large SACCOs paid 9–15% for 2025." },
+    { k: "stocks", l: "NSE dividend shares", v: 7.5, t: "est", step: 0.5, n: "Higher risk: prices can fall." },
+    { k: "reit", l: "REIT units", v: 5, t: "est", step: 0.5, n: "Higher risk; published yields conflict." },
+    { k: "riskPrem", l: "Extra return you want for the work and risk", v: 5, t: "est", step: 1, n: "Added to the Treasury bond rate to set your hurdle." },
+  ]},
+];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DEFAULTS = { unitName: "1-bedroom rental, Nairobi" };
+INPUTS.forEach(g => g.items.forEach(i => { if (i.type !== "out") DEFAULTS[i.k] = i.v; }));
+function derive() { P.adr = Math.round(P.rent * P.priceRatio / 100); const o = document.getElementById("out-adr"); if (o) o.textContent = "KES " + P.adr.toLocaleString("en-KE"); }
+const STORE = "nairobi-airbnb-returns-v2", OPEN_STORE = "nairobi-airbnb-returns-open-v2";
+let P = { ...DEFAULTS };
+try { const s = JSON.parse(localStorage.getItem(STORE) || "null");
+  if (s) Object.keys(DEFAULTS).forEach(k => { if (k === "unitName" ? typeof s[k] === "string" : (typeof s[k] === "number" && isFinite(s[k]))) P[k] = s[k]; }); } catch (e) {}
+
+const TAGTXT = { you: "MINE", mkt: "DATA", est: "EST" };
+function buildInputs() {
+  const root = document.getElementById("inputs");
+  const wide = window.innerWidth > 900;
+  root.innerHTML = INPUTS.map((g, gi) => `<details class="grp" ${wide && gi < 2 ? "open" : ""}><summary>${g.g}</summary><div class="fields">` +
+    (g.note ? `<p class="grp-note">${g.note}</p>` : "") +
+    g.items.map(i => {
+      let ctl;
+      if (i.type === "yn") ctl = `<select id="in-${i.k}" data-k="${i.k}"><option value="1">On</option><option value="0">Off</option></select>`;
+      else if (i.type === "month") ctl = `<select id="in-${i.k}" data-k="${i.k}">${MON.map((m, x) => `<option value="${x + 1}">${m}</option>`).join("")}</select>`;
+      else if (i.type === "taxb") ctl = `<select id="in-${i.k}" data-k="${i.k}"><option value="1">Profit</option><option value="0">Gross bookings</option></select>`;
+      else if (i.type === "basis") ctl = `<select id="in-${i.k}" data-k="${i.k}"><option value="0">Rent only</option><option value="1">Rent + bills</option></select>`;
+      else if (i.type === "out") ctl = `<output id="out-${i.k}" class="calc" for="in-rent in-priceRatio"></output>`;
+      else ctl = `<input type="number" id="in-${i.k}" data-k="${i.k}" step="${i.step}" min="0" inputmode="decimal">`;
+      return `<div class="field"><label for="in-${i.k}">${i.l}<span class="tag t-${i.t}">${TAGTXT[i.t]}</span></label>${ctl}${i.n ? `<span class="note">${i.n}</span>` : ""}</div>`;
+    }).join("") + `</div></details>`).join("");
+  syncInputs();
+  document.querySelector("aside").addEventListener("input", e => {
+    const k = e.target.dataset.k; if (!k) return;
+    if (k === "unitName") { P.unitName = e.target.value; save(); renderCtx(); return; }
+    const v = parseFloat(e.target.value); if (!isFinite(v)) return;
+    P[k] = v;
+    save(); render();
+  });
+}
+function syncInputs() { Object.keys(P).forEach(k => { const el = document.getElementById("in-" + k); if (el) el.value = P[k]; }); }
+function save() { try { localStorage.setItem(STORE, JSON.stringify(P)); } catch (e) {} }
+document.getElementById("reset").addEventListener("click", () => { P = { ...DEFAULTS }; save(); syncInputs(); render(); });
+
+// Sections open/closed
+const secs = () => [...document.querySelectorAll("details.sec")];
+function saveOpen() { try { localStorage.setItem(OPEN_STORE, JSON.stringify(secs().filter(d => d.open).map(d => d.id))); } catch (e) {} }
+(function initOpen() {
+  let open = ["sec-path"];
+  try { const s = JSON.parse(localStorage.getItem(OPEN_STORE) || "null"); if (Array.isArray(s)) open = s; } catch (e) {}
+  const h = (location.hash || "").slice(1); if (h && document.getElementById(h)) open.push(h);
+  secs().forEach(d => { d.open = open.includes(d.id); d.addEventListener("toggle", () => { saveOpen(); if (d.open) render(); }); });
+})();
+document.getElementById("openAll").addEventListener("click", () => { secs().forEach(d => d.open = true); saveOpen(); render(); });
+document.getElementById("closeAll").addEventListener("click", () => { secs().forEach(d => d.open = false); saveOpen(); });
+
+// ===== Formatting =====
+const nf = new Intl.NumberFormat("en-KE", { maximumFractionDigits: 0 });
+const M = "−";
+function kes(v) { if (v == null || !isFinite(v)) return "—"; const r = Math.round(v); return (r < 0 ? M : "") + nf.format(Math.abs(r)); }
+function kesK(v) { const a = Math.abs(v); const s = a >= 1e6 ? (a / 1e6).toFixed(1) + "M" : a >= 1000 ? (a < 10000 ? (a / 1000).toFixed(1).replace(/\.0$/, "") : Math.round(a / 1000)) + "k" : Math.round(a) + ""; return (v < 0 ? M : "") + s; }
+function pct(v, d = 1) { if (v == null || !isFinite(v)) return "—"; return (v < 0 ? M : "") + Math.abs(v * 100).toFixed(d) + "%"; }
+function sp(v, t) { return `<span class="${v < 0 ? "neg" : "pos"}">${t == null ? kes(v) : t}</span>`; }
+function signed(v) { return (Math.round(v) > 0 ? "+" : "") + kes(v); }
+function monthName(i) { const idx = P.startMonth - 1 + i - 1; return MON[idx % 12] + " " + String(P.startYear + Math.floor(idx / 12)).slice(2); }
+function nightsTxt(n) { return isFinite(n) ? n.toFixed(1) : "never"; }
+function line(key, html) { const el = document.querySelector(`[data-line="${key}"]`); if (el) el.innerHTML = html; }
+function renderCtx() { document.getElementById("ctx").textContent = "Modelling: " + (P.unitName || "your unit") + ". Every number is editable in the panel."; }
+
+// ===== Tooltip =====
+const tip = document.getElementById("tip");
+function bindTips(c) { c.querySelectorAll("[data-tip]").forEach(el => {
+  const show = e => { tip.innerHTML = el.getAttribute("data-tip"); tip.hidden = false;
+    const x = e.clientX + window.scrollX; tip.style.left = Math.min(Math.max(x, 90), document.documentElement.clientWidth + window.scrollX - 90) + "px"; tip.style.top = (e.clientY + window.scrollY) + "px"; };
+  el.addEventListener("mousemove", show); el.addEventListener("click", show); el.addEventListener("mouseleave", () => tip.hidden = true); }); }
+function niceTicks(min, max, count = 5) {
+  const span = max - min || 1, raw = span / count, mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const step = [1, 2, 2.5, 5, 10].map(m => m * mag).find(s => span / s <= count) || mag * 10;
+  const out = []; let v = Math.floor(min / step) * step; for (; v <= max + 1e-9; v += step) out.push(+v.toFixed(10));
+  if (out[out.length - 1] < max - 1e-9) out.push(+v.toFixed(10)); return out;
+}
+function width(el, min) { return Math.max(min, el.clientWidth || min); }
+
+// ===== Charts =====
+function occChart() {
+  const el = document.getElementById("c-occ"); if (!el.offsetParent) return;
+  const W = width(el, 560), H = 290, L = 58, R = 12, T = 26, B = 34;
+  const xs = []; for (let n = 4; n <= 30; n++) xs.push(n);
+  const vals = xs.map(n => monthPL(P, n).profit);
+  const ticks = niceTicks(Math.min(0, ...vals), Math.max(0, ...vals));
+  const y0 = ticks[0], y1 = ticks[ticks.length - 1], Y = v => T + (H - T - B) * (1 - (v - y0) / (y1 - y0)), bw = (W - L - R) / xs.length;
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Monthly profit by booked nights">`;
+  ticks.forEach(t => s += `<line x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--line)"/><text x="${L - 6}" y="${Y(t) + 4}" text-anchor="end" class="val">${kesK(t)}</text>`);
+  s += `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--muted)"/>`;
+  xs.forEach((n, i) => { const v = vals[i], x = L + i * bw + 2, w = Math.max(2, bw - 4), y = Math.min(Y(v), Y(0)), h = Math.max(1, Math.abs(Y(v) - Y(0))), over = n > P.cap;
+    s += `<g data-tip="${n} nights (${Math.round(n / 30 * 100)}%) · ${kes(v)} a month${over ? " · above your max" : ""}"><rect x="${L + i * bw}" y="${T}" width="${bw}" height="${H - T - B}" fill="transparent"/><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="3" fill="${v < 0 ? "var(--loss)" : "var(--gain)"}" opacity="${over ? 0.35 : 1}"/></g>`;
+    if (n % 5 === 0) s += `<text x="${L + i * bw + bw / 2}" y="${H - B + 16}" text-anchor="middle">${n}</text>`; });
+  const mark = (n, label) => { if (n < 4 || n > 30) return ""; const x = L + (n - 4) * bw + bw / 2; return `<line x1="${x}" x2="${x}" y1="${T - 4}" y2="${H - B}" stroke="var(--c-demand)" stroke-dasharray="4 3"/><text x="${x}" y="${T - 10}" text-anchor="middle" style="fill:var(--c-demand);font-weight:600">${label}</text>`; };
+  s += mark(Math.round(P.nights), "expected") + (Math.round(P.cap) !== Math.round(P.nights) ? mark(Math.round(P.cap), "max") : "");
+  s += `<text x="${(W + L) / 2}" y="${H - 4}" text-anchor="middle">Booked nights per month</text></svg>`;
+  el.innerHTML = s; bindTips(el);
+}
+function cashChart(sim, full) {
+  const el = document.getElementById("c-cash"); if (!el.offsetParent) return;
+  const W = width(el, 560), H = 260, L = 58, R = 30, T = 14, B = 34, N = full.N;
+  const start = P.reserve + P.rent;
+  const ptsA = [{ i: 0, cash: start }].concat(sim.months.map(m => ({ i: m.i, cash: m.cash, op: m.op, n: m.nights })));
+  const ptsF = [{ i: 0, cash: start }].concat(full.months.map(m => ({ i: m.i, cash: m.cash, op: m.op, n: m.nights })));
+  const vs = ptsF.map(p => p.cash).concat([sim.floor, 0]);
+  const ticks = niceTicks(Math.min(...vs), Math.max(...vs));
+  const y0 = ticks[0], y1 = ticks[ticks.length - 1], X = i => L + (W - L - R) * i / N, Y = v => T + (H - T - B) * (1 - (v - y0) / (y1 - y0));
+  const path = pts => pts.map((p, k) => (k ? "L" : "M") + X(p.i).toFixed(1) + " " + Y(p.cash).toFixed(1)).join(" ");
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Cash balance by month">`;
+  ticks.forEach(t => s += `<line x1="${L}" x2="${W - R}" y1="${Y(t)}" y2="${Y(t)}" stroke="var(--line)"/><text x="${L - 6}" y="${Y(t) + 4}" text-anchor="end" class="val">${kesK(t)}</text>`);
+  s += `<line x1="${L}" x2="${W - R}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--muted)"/>`;
+  s += `<line x1="${L}" x2="${W - R}" y1="${Y(sim.floor)}" y2="${Y(sim.floor)}" stroke="var(--loss)" stroke-dasharray="5 4"/>`;
+  if (sim.closedEarly) s += `<path d="${path(ptsF)}" fill="none" stroke="var(--faint)" stroke-width="1.5" stroke-dasharray="4 4"/>`;
+  s += `<path d="${path(ptsA)} L${X(ptsA[ptsA.length - 1].i)} ${Y(Math.max(y0, 0))} L${X(0)} ${Y(Math.max(y0, 0))}Z" fill="var(--c-risk)" opacity=".12"/>`;
+  s += `<path d="${path(ptsA)}" fill="none" stroke="var(--c-risk)" stroke-width="2.5"/>`;
+  const step = N > 24 ? 6 : 3;
+  for (let i = step; i <= N; i += step) s += `<text x="${X(i)}" y="${H - B + 16}" text-anchor="middle">${monthName(i)}</text>`;
+  const end = ptsA[ptsA.length - 1];
+  if (sim.closedEarly) s += `<circle cx="${X(end.i)}" cy="${Y(end.cash)}" r="5.5" fill="var(--loss)" stroke="var(--surface)" stroke-width="2"/><text x="${X(end.i) + 9}" y="${Y(end.cash) - 9}" style="fill:var(--loss);font-weight:600">closes ${monthName(end.i)}</text>`;
+  else s += `<circle cx="${X(end.i)}" cy="${Y(end.cash)}" r="4.5" fill="var(--c-risk)"/>`;
+  ptsF.slice(1).forEach(p => s += `<rect x="${X(p.i - 0.5)}" y="${T}" width="${(W - L - R) / N}" height="${H - T - B}" fill="transparent" data-tip="${monthName(p.i)} · ${p.n.toFixed(1)} nights · month ${kes(p.op)} · cash ${kes(p.cash)}${sim.closedEarly && p.i > sim.run ? " (if kept going)" : ""}"/>`);
+  el.innerHTML = s + `</svg>`; bindTips(el);
+}
+function hbars(elId, rows, opts) {
+  const el = document.getElementById(elId); if (!el.offsetParent) return;
+  const W = width(el, 520), rowH = 30, L = opts.L || 190, R = 80, T = 8, B = 26, H = T + B + rows.length * rowH;
+  const vals = rows.flatMap(r => [r.v ?? 0, r.v2 ?? 0, 0]);
+  const ticks = niceTicks(Math.min(...vals), Math.max(...vals), 5);
+  const x0 = ticks[0], x1 = ticks[ticks.length - 1], X = v => L + (W - L - R) * (v - x0) / (x1 - x0);
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${opts.aria}">`;
+  ticks.forEach(t => s += `<line x1="${X(t)}" x2="${X(t)}" y1="${T}" y2="${H - B}" stroke="var(--line)"/><text x="${X(t)}" y="${H - 8}" text-anchor="middle" class="val">${opts.fmt(t)}</text>`);
+  s += `<line x1="${X(0)}" x2="${X(0)}" y1="${T}" y2="${H - B}" stroke="var(--muted)"/>`;
+  rows.forEach((r, i) => { const y = T + i * rowH + 6, h = rowH - 12;
+    s += `<text x="${L - 8}" y="${y + h / 2 + 4}" text-anchor="end" style="fill:var(--ink)${r.bold ? ";font-weight:600" : ""}">${r.label}</text>`;
+    const bar = (v, c) => { const a = X(Math.min(0, v)), b = X(Math.max(0, v)); return `<rect x="${a}" y="${y}" width="${Math.max(1.5, b - a)}" height="${h}" rx="3" fill="${c}"/>`; };
+    s += `<g data-tip="${r.tip}"><rect x="0" y="${y - 4}" width="${W}" height="${rowH}" fill="transparent"/>`;
+    if (r.v2 != null) s += bar(r.v2, r.color2); if (r.v != null) s += bar(r.v, r.color); s += `</g>`;
+    if (r.text) { const ex = Math.max(r.v ?? 0, r.v2 ?? 0, 0); s += `<text x="${X(ex) + 6}" y="${y + h / 2 + 4}" class="val" style="fill:var(--ink)">${r.text}</text>`; } });
+  el.innerHTML = s + `</svg>`; bindTips(el);
+}
+
+// ===== Render =====
+function render() {
+  derive();
+  renderCtx();
+  const sim = simulate(P), full = simulate(P, { ignoreStop: true });
+  const mx = mix(P);
+  const pl = monthPL(P, P.nights), plMax = monthPL(P, P.cap);
+  const beN = breakEvenNights(P), beR = breakEvenRate(P, P.nights), beRmax = breakEvenRate(P, P.cap);
+  const best = sim.safe, safeR = best.rate / 100, hurdle = sim.required;
+  const bestLow = best.label.replace(/^(Money|Bank|Infrastructure)/, m => m.toLowerCase());
+  const fullIrr = full.irr;
+  const beRent = Math.max(0, P.rent + pl.profit);
+
+  // Paths to profit (needed first for snapshot)
+  const steadyOK = q => monthPL(q, q.nights).profit >= 0;
+  const beatOK = q => { const r = simulate(q, { ignoreStop: true }).irr; return r != null && r >= safeR; };
+  const levers = [
+    { name: "Nightly rate", cur: P.adr, fmt: v => "KES " + kes(Math.ceil(v / 50) * 50) + (P.rent > 0 ? ` · ${(Math.ceil(v / 50) * 50 / P.rent * 100).toFixed(1)}% of rent` : ""), set: (q, v) => { q.adr = v; }, lo: 0, hi: 50000, dir: 1, feas: v => v <= P.localHigh ? "ok" : v <= P.localHigh * 1.25 ? "meh" : "bad", feasTxt: v => v <= P.localHigh ? "within local range" : "above local range" },
+    { name: "Booked nights / month", cur: P.nights, fmt: v => v.toFixed(1), set: (q, v) => { q.nights = v; q.cap = Math.max(P.cap, v); }, lo: 0, hi: 30, dir: 1, feas: v => v <= P.cap ? "ok" : v <= 30 ? "meh" : "bad", feasTxt: v => v <= P.cap ? "within your max" : "above your max" },
+    { name: "Direct bookings (no platform fee)", cur: P.direct, fmt: v => Math.ceil(v) + "%", set: (q, v) => { q.direct = v; }, lo: 0, hi: 100, dir: 1, feas: v => v <= 25 ? "ok" : v <= 50 ? "meh" : "bad", feasTxt: v => v <= 25 ? "realistic with repeat guests" : "hard for a new listing" },
+  ].map(l => {
+    const f = ok => solveLever(v => { const q = { ...P }; l.set(q, v); return ok(q); }, l.lo, l.hi, l.dir);
+    return { ...l, be: f(steadyOK), beat: f(beatOK) };
+  });
+  const past = (l, v) => v != null && (l.dir > 0 ? v <= l.cur + 1e-6 : v >= l.cur - 1e-6);
+  const atLimit = (l, v) => v != null && Math.abs(v - (l.dir > 0 ? l.lo : l.hi)) < 1e-6;
+  const pctChg = (l, v) => l.cur ? ` <span style="color:var(--muted)">(${v > l.cur ? "+" : ""}${Math.round((v / l.cur - 1) * 100)}%)</span>` : "";
+  const cell = (l, v) => v == null ? "—" : past(l, v) ? (atLimit(l, v) ? "not needed" : (l.dir > 0 ? "down to " : "up to ") + l.fmt(v) + pctChg(l, v)) : l.fmt(v) + pctChg(l, v);
+  const chip = (l, v) => v == null ? `<span class="chip bad">not reachable alone</span>` : past(l, v) ? (atLimit(l, v) ? `<span class="chip ok">met without it</span>` : Math.abs(v / (l.cur || 1) - 1) < 0.05 ? `<span class="chip meh">right at the line</span>` : `<span class="chip ok">room to spare</span>`) : `<span class="chip ${l.feas(v)}">${l.feasTxt(v)}</span>`;
+
+  // Snapshot
+  let tone, label;
+  const gain0 = sim.endWealth - sim.committed, alt0 = sim.altWealth - sim.committed;
+  const good = ["var(--gain-soft)", "var(--gain)"], mid = ["var(--warn-soft)", "var(--warn)"];
+  if (pl.profit < 0) { tone = ["var(--loss-soft)", "var(--loss)"]; label = "Below break-even"; }
+  else if (gain0 < 0) { tone = mid; label = "Profitable months · loses overall"; }
+  else if (gain0 < alt0 * 0.75) { tone = mid; label = "Profitable · trails low-risk options"; }
+  else if (gain0 < alt0) { tone = good; label = "Profitable · close to low-risk options"; }
+  else if (fullIrr != null && fullIrr >= hurdle) { tone = good; label = "Profitable · clears your hurdle"; }
+  else { tone = good; label = "Profitable · beats low-risk options"; }
+  const rateL = levers[0], nightL = levers[1], rentL = null;
+  const beList = [rateL.be != null ? `<b>${rateL.fmt(rateL.be)}</b> a night` : null, nightL.be != null && nightL.be <= 30 ? `<b>${nightL.be.toFixed(1)} nights</b> a month` : null, null].filter(Boolean);
+  let snap = `At <b>KES ${kes(P.adr)}</b> a night${P.rent > 0 ? ` (${(P.adr / P.rent * 100).toFixed(1)}% of the KES ${kes(P.rent)} rent)` : ""} and <b>${P.nights} nights</b> a month, a settled month comes to <b>${sp(pl.profit)}</b> after fees, tax and running costs. `;
+  snap += pl.profit < 0 ? `It breaks even with any one of: ${beList.join(", ")}. ` : `The money working in the business earns <b>${fullIrr == null ? "a negative return" : pct(fullIrr) + " a year"}</b> (IRR), against ${pct(safeR)} from ${bestLow}. `;
+  snap += sim.closedEarly ? `If bookings run as entered, your stop rule closes it in <b>${monthName(sim.run)}</b> and you walk away with <b>KES ${kes(sim.leftover)}</b> of the KES ${kes(sim.committed)} you put in.`
+    : `After ${P.years} years the KES ${kes(sim.committed)} you put in becomes <b>KES ${kes(sim.endWealth)}</b> (${signed(gain0)}), against ${signed(alt0)} in ${bestLow}.${gain0 < alt0 && fullIrr != null && fullIrr >= safeR - 0.01 ? " Part of that gap is the cash reserve, which sits as a safety net earning only the money market rate." : ""}`;
+  document.getElementById("snap").innerHTML = `<div class="row"><span class="pill" style="background:${tone[0]};color:${tone[1]}">${label}</span><span class="eyebrow" style="align-self:center">Snapshot</span></div><p>${snap}</p><p style="font-size:.84rem;color:var(--muted)">Open <a href="#sec-path" id="goPath">Targets</a> to see what this rests on, or edit the inputs.</p>`;
+  document.getElementById("goPath").onclick = e => { e.preventDefault(); const d = document.getElementById("sec-path"); d.open = true; d.scrollIntoView({ behavior: "smooth", block: "start" }); };
+
+  // KPIs
+  document.getElementById("kpis").innerHTML = [
+    ["Settled month", sp(pl.profit), `at ${P.nights} nights · ${sp(plMax.profit)} at ${P.cap}`, "var(--c-cost)"],
+    ["Break-even", `${nightsTxt(beN)} <span style="font-size:.9rem">nights</span>`, `or KES ${kes(beR)} a night at ${P.nights} nights`, "var(--c-demand)"],
+    ["Stop rule", sim.closedEarly ? `<span class="neg">${monthName(sim.run)}</span>` : `<span class="pos">not hit</span>`, `cash floor KES ${kes(sim.floor)}`, "var(--c-risk)"],
+    [`After ${P.years} years`, sp(sim.endWealth - sim.committed, signed(sim.endWealth - sim.committed)), `on KES ${kes(sim.committed)} committed`, "var(--c-money)"],
+    [`Same money, ${best.label}`, `<span class="pos">+${kes(sim.altWealth - sim.committed)}</span>`, `${pct(safeR)} a year after tax, no work`, "var(--c-alt)"],
+  ].map(k => `<div class="kpi" style="--kc:${k[3]}"><span class="eyebrow">${k[0]}</span><span class="v">${k[1]}</span><span class="s">${k[2]}</span></div>`).join("");
+
+  // 1 Start
+  const dep = P.depMonths * P.rent, upfront = P.furnish + dep + P.rent, atRisk = P.furnish * (1 - P.salvage / 100) + dep * (1 - P.depRefund / 100);
+  line("start", `KES ${kes(sim.committed)} committed · ${kes(atRisk)} can't be recovered`);
+  document.getElementById("t-start").innerHTML = `<tr><th>Item</th><th class="n">KES</th><th>Comes back?</th></tr>
+    <tr><td>Furnishing and setup</td><td class="n">${kes(P.furnish)}</td><td><span class="chip meh">${P.salvage}% via resale</span></td></tr>
+    <tr><td>Deposit (${P.depMonths} × rent)</td><td class="n">${kes(dep)}</td><td><span class="chip ok">${P.depRefund}% at exit</span></td></tr>
+    <tr><td>First month's rent</td><td class="n">${kes(P.rent)}</td><td><span class="chip meh">it's month 1's cost</span></td></tr>
+    <tr class="total"><td>Upfront cash</td><td class="n">${kes(upfront)}</td><td></td></tr>
+    <tr><td>Cash reserve</td><td class="n">${kes(P.reserve)}</td><td><span class="chip ok">whatever isn't used</span></td></tr>
+    <tr class="total"><td>Total committed</td><td class="n">${kes(sim.committed)}</td><td></td></tr>
+    <tr class="sub"><td>Lost for good even if you close on day one</td><td class="n">${kes(atRisk)}</td><td>furniture value lost + deposit kept</td></tr>`;
+
+  // 2 Month
+  line("month", `${signed(pl.profit)} at ${P.nights} nights · ${signed(plMax.profit)} at ${P.cap} nights`);
+  const rows = [["Nightly revenue", "nightRev"], ["Cleaning fees from guests", "cleanRev"], ["Gross bookings", "gross", "total"],
+    [`Platform fees (${(sim.dr.platform * 100).toFixed(1)}% blended)`, "platform", "neg"], ["Tourism levy", "levy", "neg"], [P.taxBasis === 1 ? `Income tax (${P.taxProfit}% of profit)` : "Income tax", "tax", "neg"], ["What reaches you", "net", "total"],
+    ["Cleaning", "cleaning", "neg"], ["Supplies", "supplies", "neg"], ["Electricity", "elec", "neg"], ["Rent", "rent", "neg"], ["Wi-Fi", "wifi", "neg"],
+    ["Water", "water", "neg"], ["Repairs and replacements", "repairs", "neg"], ["Licences (monthly share)", "licence", "neg"], ["Total running costs", "costs", "total neg"], ["Profit", "profit", "total p"]];
+  if (P.hourVal > 0) rows.push(["Value of your time", "time", "neg sub"], ["Profit after paying yourselves", "profitAfterTime", "p"]);
+  document.getElementById("t-month").innerHTML = `<tr><th></th><th class="n">${P.nights} nights · expected</th><th class="n">${P.cap} nights · max</th></tr>` +
+    `<tr class="sub"><td>Occupancy · stays · rate after stay discounts</td><td class="n">${Math.round(P.nights / 30 * 100)}% · ${pl.stays.toFixed(1)} · ${kes(pl.eff)}</td><td class="n">${Math.round(P.cap / 30 * 100)}% · ${plMax.stays.toFixed(1)} · ${kes(plMax.eff)}</td></tr>` +
+    rows.map(r => { const c = r[2] || "", neg = c.includes("neg"), p = c.includes("p"), cl = v => p ? sp(v) : (neg ? M + kes(v) : kes(v));
+      return `<tr class="${c.includes("total") ? "total" : ""} ${c.includes("sub") ? "sub" : ""}"><td>${r[0]}</td><td class="n">${cl(pl[r[1]])}</td><td class="n">${cl(plMax[r[1]])}</td></tr>`; }).join("");
+
+  // 3 Break-even
+  line("be", `${nightsTxt(beN)} nights at KES ${kes(P.adr)} · or KES ${kes(beR)} at ${P.nights} nights`);
+  const dPct = (sim.dr.total * 100).toFixed(1);
+  document.getElementById("be").innerHTML = [
+    ["Nights needed at your rate", nightsTxt(beN), isFinite(beN) ? Math.round(beN / 30 * 100) + "% occupancy" : "each night loses money"],
+    ["Rate needed at expected nights", "KES " + kes(beR), `at ${P.nights} nights a month`],
+    ["Rate needed at your max", "KES " + kes(beRmax), `at ${P.cap} nights a month`],
+    ["Highest rent that breaks even", "KES " + kes(beRent), `at ${P.nights} nights; KES ${kes(Math.max(0, P.rent + plMax.profit))} at ${P.cap}`],
+    ["Each booked night adds", "KES " + kes(contributionPerNight(P)), "after fees, tax, cleaning, supplies, power"],
+    ["Paid every month, booked or not", "KES " + kes(fixedMonthly(P)), "rent, Wi-Fi, water, base power, repairs, licences"],
+  ].map(k => `<div class="kpi"><span class="eyebrow">${k[0]}</span><span class="v num">${k[1]}</span><span class="s">${k[2]}</span></div>`).join("");
+  document.getElementById("be-note").innerHTML = `<b>${dPct}% of what guests pay goes to platforms and levy${P.taxBasis === 1 ? "" : " and tax"}.</b> At ${P.cap} nights and KES ${kes(P.adr)} that is KES ${kes(plMax.platform + plMax.levy + (P.taxBasis === 1 ? 0 : plMax.tax))} a month before any running cost. Direct bookings are the biggest lever on this line.`;
+
+  // 4 Paths
+  const okish = (l, v) => v != null && (past(l, v) || l.feas(v) === "ok");
+  const nBe = levers.filter(l => okish(l, l.be)).length, nBeat = levers.filter(l => okish(l, l.beat)).length;
+  line("path", pl.profit >= 0 ? `break-even holds down to ${rateL.fmt(rateL.be)} a night or ${nightL.be.toFixed(1)} nights a month` : `${nBe} of 4 single changes reach break-even in a realistic range · ${nBeat} beat ${bestLow}`);
+  document.getElementById("t-path").innerHTML = `<tr><th>Change only this</th><th class="n">Now</th><th class="n">Break-even</th><th class="n">Match ${bestLow} (${pct(safeR)})</th></tr>` +
+    levers.map(l => `<tr><td style="white-space:normal">${l.name}</td><td class="n">${l.fmt(l.cur)}</td><td class="n"><div>${cell(l, l.be)}</div><div style="margin-top:3px">${chip(l, l.be)}</div></td><td class="n"><div>${cell(l, l.beat)}</div><div style="margin-top:3px">${chip(l, l.beat)}</div></td></tr>`).join("");
+  const combo = { ...P, adr: Math.max(P.adr, P.localHigh), nights: P.cap }, comboPl = monthPL(combo, combo.nights), comboSim = simulate(combo, { ignoreStop: true });
+  if (pl.profit >= 0) document.getElementById("path-note").innerHTML = `<b>What this rests on:</b> ${P.nights} booked nights a month at KES ${kes(P.adr)}. Each night more or less moves monthly profit by about KES ${kes(contributionPerNight(P))}. Below ${nightsTxt(beN)} nights a month loses money; the <i>Quieter</i> scenario shows a slower year.`;
+  else document.getElementById("path-note").innerHTML = `<b>Combined example:</b> charge KES ${kes(combo.adr)} (top of your local range) and fill ${P.cap} nights. A settled month comes to ${sp(comboPl.profit)}, and running it for ${P.years} years returns ${comboSim.irr == null ? "a loss" : pct(comboSim.irr) + " a year"} against ${pct(safeR)} from ${bestLow}.`;
+
+  // 5 Occupancy & mix
+  line("occ", `average stay ${mx.avgStay.toFixed(1)} nights · rate after discounts KES ${kes(P.adr * mx.factor)} · ${pl.stays.toFixed(1)} cleanings a month`);
+  occChart();
+  document.getElementById("t-mix").innerHTML = `<tr><th>Stay length</th><th class="n">Share of bookings</th><th class="n">Avg nights</th><th class="n">Share of nights</th><th class="n">Discount</th><th class="n">Rate</th></tr>` +
+    mx.bands.map(b => `<tr><td>${b.name}</td><td class="n">${Math.round(b.w * 100)}%</td><td class="n">${b.L}</td><td class="n">${Math.round(b.nightShare * 100)}%</td><td class="n">${b.d}%</td><td class="n">${kes(P.adr * (1 - b.d / 100))}</td></tr>`).join("") +
+    `<tr class="total"><td>Blended</td><td class="n">100%</td><td class="n">${mx.avgStay.toFixed(1)}</td><td class="n">100%</td><td class="n">${((1 - mx.factor) * 100).toFixed(1)}%</td><td class="n">${kes(P.adr * mx.factor)}</td></tr>`;
+  let occ = `<tr><th class="n">Nights</th><th class="n">Occupancy</th><th class="n">Gross bookings</th><th class="n">Fees + tax</th><th class="n">Running costs</th><th class="n">Profit / month</th><th class="n">Profit / year</th></tr>`;
+  for (let n = 4; n <= 30; n++) { const r = monthPL(P, n);
+    occ += `<tr class="${n === Math.round(P.nights) ? "hl" : ""}"><td class="n">${n}${n > P.cap ? " *" : ""}</td><td class="n">${Math.round(n / 30 * 100)}%</td><td class="n">${kes(r.gross)}</td><td class="n">${M}${kes(r.platform + r.levy + r.tax)}</td><td class="n">${M}${kes(r.costs)}</td><td class="n">${sp(r.profit)}</td><td class="n">${sp(r.profit * 12)}</td></tr>`; }
+  document.getElementById("t-occ").innerHTML = occ + `<tr class="sub"><td colspan="7">* above your stated maximum. Highlighted row = your expected nights.</td></tr>`;
+
+  // 6 Scenarios
+  const scen = [
+    { name: "Quieter", d: "5 fewer nights a month", p: { nights: Math.max(0, P.nights - 5) } },
+    { name: "Lower price", d: "low end of local range", p: { adr: P.localLow } },
+    { name: "Base case", d: "average nights and rate", p: {} },
+    { name: "Higher price", d: "top of local range", p: { adr: Math.max(P.localHigh, P.adr * 1.1) } },
+    { name: "Fully booked", d: "every night of the month", p: { nights: P.cap } },
+  ].map(s => { const q = { ...P, ...s.p }; return { ...s, q, r: simulate(q), f: simulate(q, { ignoreStop: true }), pl: monthPL(q, q.nights) }; });
+  const nGood = scen.filter(s => s.pl.profit >= 0).length;
+  line("scn", `${nGood} of 5 profitable in a settled month · best case ${signed(Math.max(...scen.map(s => s.pl.profit)))} a month`);
+  const srow = (lab, f, cls) => `<tr class="${cls || ""}"><td>${lab}</td>${scen.map(s => `<td class="n">${f(s)}</td>`).join("")}</tr>`;
+  document.getElementById("t-scn").innerHTML = `<tr><th></th>${scen.map(s => `<th class="n">${s.name}</th>`).join("")}</tr>` +
+    `<tr class="sub"><td></td>${scen.map(s => `<td class="n" style="white-space:normal;font-family:var(--f-body);font-size:.76rem">${s.d}</td>`).join("")}</tr>` +
+    srow("Nightly rate", s => kes(s.q.adr)) + srow("Average booked nights", s => s.f.avgNights.toFixed(1)) +
+    srow("Settled month", s => sp(s.pl.profit)) +
+    srow("Stop rule", s => s.r.closedEarly ? `<span class="chip bad">closes ${monthName(s.r.run)}</span>` : `<span class="chip ok">runs full period</span>`) +
+    srow(`Gain or loss after ${P.years} years`, s => sp(s.r.endWealth - s.r.committed, signed(s.r.endWealth - s.r.committed)), "total") +
+    srow(`…same money in ${bestLow}`, s => `<span class="pos">+${kes(s.r.altWealth - s.r.committed)}</span>`, "sub") +
+    srow("Yearly return if run full period", s => sp(s.f.irr == null ? -1 : s.f.irr, s.f.irr == null ? "negative" : pct(s.f.irr))) +
+    srow(`Ends ahead of ${bestLow}?`, s => { const a = s.r.endWealth - s.r.committed, b = s.r.altWealth - s.r.committed;
+      return a >= b ? `<span class="chip ok">✓ yes</span>` : a >= 0.75 * b ? `<span class="chip meh">close</span>` : `<span class="chip bad">✕ no</span>`; });
+
+  // 7 Runway
+  cashChart(sim, full);
+  line("run", sim.closedEarly ? `stop rule closes it ${monthName(sim.run)} · you keep KES ${kes(sim.leftover)}` : `stop rule not hit · cash at end KES ${kes(sim.months[sim.run - 1].cash)}`);
+  const lossMonths = full.months.filter(m => m.op < 0).length;
+  let rn = `You start with <b>KES ${kes(P.reserve)}</b> of reserve plus the first month's rent. The stop floor is <b>KES ${kes(sim.floor)}</b> (${P.killRent} month${P.killRent === 1 ? "" : "s"} of ${P.floorBasis === 1 ? "rent and bills" : "rent"})${P.killMonths > 0 ? `, or ${P.killMonths} losing months in a row` : ""}. `;
+  if (sim.closedEarly) {
+    rn += `At your numbers the rule fires in <b>${monthName(sim.run)}</b>. Closing then, you sell the furniture and collect the deposit, leaving <b>KES ${kes(sim.leftover)}</b>, a loss of KES ${kes(sim.committed - sim.leftover)}. `;
+    rn += `Ignoring the rule and running ${P.years} years would grow the loss to <b>KES ${kes(full.committed - (full.months[full.N - 1].cash + full.exitValue))}</b> (${lossMonths} of ${full.N} months lose money).`;
+  } else rn += `The rule isn't triggered. ${lossMonths} of ${full.N} months lose money, mostly at launch and in quiet seasons.`;
+  document.getElementById("run-note").innerHTML = rn;
+
+  // 8 Returns
+  const ALTS = [
+    { k: "mmf", label: "Money market fund", time: "None", access: "1–3 days", risk: "Low. Not deposit-insured", safe: true },
+    { k: "fd", label: "Bank fixed deposit", time: "None", access: "End of term; penalty to break early", risk: "Very low", safe: true },
+    { k: "tbill", label: "364-day T-bill", time: "About an hour to open a CBK account", access: "After 1 year", risk: "Very low", safe: true },
+    { k: "tbond", label: "Treasury bond", time: "About an hour", access: "Sell on the NSE at market price", risk: "Low if held to maturity", safe: true },
+    { k: "ifb", label: "Infrastructure bond", time: "About an hour", access: "Sell on the NSE at market price; long term", risk: "Low if held to maturity", safe: true },
+    { k: "sacco", label: "SACCO deposits", time: "Monthly contributions", access: "Usually only when you leave the SACCO", risk: "Depends on the SACCO's management", safe: true },
+    { k: "stocks", label: "NSE dividend shares", time: "Some research", access: "About 3 days via a broker", risk: "Share prices can fall", safe: false },
+    { k: "reit", label: "REIT units", time: "None", access: "Thin trading", risk: "Payouts and prices uncertain", safe: false },
+  ];
+  const C = sim.committed, g = r => C * (Math.pow(1 + r / 100, P.years) - 1);
+  const airGain = sim.endWealth - C;
+  line("ret", `best low-risk: ${best.label} ${pct(safeR)} → +${kes(sim.altWealth - C)} · this Airbnb: ${signed(airGain)}`);
+  const br = ALTS.map(a => ({ label: a.label, v: g(P[a.k]), color: a.safe ? "var(--c-alt)" : "var(--faint)", text: "+" + kesK(g(P[a.k])), tip: `${a.label}: ${P[a.k].toFixed(1)}% a year → +${kes(g(P[a.k]))}` }))
+    .concat([{ label: "This Airbnb", v: airGain, bold: true, color: airGain < 0 ? "var(--loss)" : "var(--gain)", text: (airGain > 0 ? "+" : "") + kesK(airGain), tip: `This Airbnb${sim.closedEarly ? `, closed ${monthName(sim.run)} then ${bestLow}` : ""}: ${signed(airGain)}` }]);
+  hbars("c-ret", br, { aria: "Gain after the full period", fmt: kesK, L: 170 });
+  document.getElementById("t-bench").innerHTML = `<tr><th>KES ${kes(C)} in…</th><th class="n">Return / yr</th><th class="n">Income / month</th><th class="n">${P.years}-yr gain</th><th>Your time</th><th>Getting money out</th><th>Main risk</th></tr>` +
+    ALTS.map(a => `<tr class="${a.k === best.key ? "hl" : ""}"><td>${a.label}${a.k === best.key ? ' <span class="chip ok">best low-risk</span>' : ""}</td><td class="n">${P[a.k].toFixed(1)}%</td><td class="n">${kes(C * P[a.k] / 100 / 12)}</td><td class="n pos">+${kes(g(P[a.k]))}</td><td>${a.time}</td><td>${a.access}</td><td>${a.risk}</td></tr>`).join("") +
+    `<tr class="total"><td>This Airbnb</td><td class="n">${sim.closedEarly ? "closes early" : pct(sim.irr)}</td><td class="n">${sp(sim.totalOp / sim.run)}</td><td class="n">${sp(airGain, signed(airGain))}</td><td>About ${Math.round(sim.hours / sim.run)} h a month</td><td>Only by closing; ${P.salvage}% of furniture and ${P.depRefund}% of deposit back</td><td>Losses beyond the reserve</td></tr>`;
+  document.getElementById("t-ret").innerHTML = `<tr><th>This Airbnb, following your stop rule</th><th class="n">KES</th></tr>
+    <tr><td>Committed (setup, deposit, first rent, reserve)</td><td class="n">${kes(C)}</td></tr>
+    <tr><td>Months operated</td><td class="n">${sim.run} of ${sim.N}</td></tr>
+    <tr><td>Operating profit or loss</td><td class="n">${sp(sim.totalOp)}</td></tr>
+    <tr><td>Back at exit (furniture resale + deposit)</td><td class="n">${kes(sim.exitValue)}</td></tr>
+    <tr><td>Cash you walk away with</td><td class="n">${kes(sim.leftover)}</td></tr>
+    ${sim.closedEarly ? `<tr><td>…then in ${bestLow} until the end of year ${P.years}</td><td class="n">${kes(sim.endWealth)}</td></tr>` : ""}
+    <tr class="total"><td>Gain or loss after ${P.years} years</td><td class="n">${sp(airGain, signed(airGain))}</td></tr>
+    <tr><td>Yearly return if it ran the full period</td><td class="n">${sp(fullIrr == null ? -1 : fullIrr, fullIrr == null ? "negative" : pct(fullIrr))}</td></tr>
+    <tr><td>Your hurdle (best low-risk + ${P.riskPrem} points)</td><td class="n">${pct(hurdle)}</td></tr>
+    <tr class="sub"><td>Your unpaid hours</td><td class="n">${nf.format(Math.round(sim.hours))} h</td></tr>`;
+
+  // 9 Sensitivity
+  const base = full.result;
+  const sens = [["Rate as % of rent", ["priceRatio"]], ["Booked nights", ["nights"]], ["Rent (rate follows)", ["rent"]], ["Platform fees", ["airFee", "bookFee"]],
+    ["Furnishing cost", ["furnish"]], ["Supplies", ["supplies"]], ["Income tax rate", ["tax"]], ["Cleaning cost", ["cleanCost"]], ["Long-stay discounts", ["disc3", "disc4"]]]
+    .map(([label, keys]) => { const mk = f => { const q = { ...P }; keys.forEach(k => q[k] = P[k] * f); q.adr = Math.round(q.rent * q.priceRatio / 100); if (keys[0] === "nights") q.cap = Math.max(P.cap, q.nights); return simulate(q, { ignoreStop: true }).result - base; };
+      const lo = mk(0.8), hi = mk(1.2); return { label, lo, hi, span: Math.abs(hi - lo) }; }).sort((a, b) => b.span - a.span);
+  line("sens", `biggest drivers: ${sens.slice(0, 3).map(s => s.label.toLowerCase()).join(", ")}`);
+  hbars("c-tor", sens.map(s => ({ label: s.label, v: s.lo, v2: s.hi, color: "var(--c-cost)", color2: "var(--c-demand)", tip: `${s.label} 20% lower: ${signed(s.lo)} · 20% higher: ${signed(s.hi)}` })), { aria: "Sensitivity", fmt: kesK, L: 140 });
+  const step = Math.max(250, Math.round(P.adr / 6 / 250) * 250), r0 = Math.max(step, Math.round(P.adr / step) * step - 4 * step);
+  const rates = []; for (let i = 0; i < 9; i++) rates.push(r0 + i * step);
+  const nightsArr = []; for (let n = 6; n <= 30; n += 3) nightsArr.push(n);
+  const vals = nightsArr.flatMap(n => rates.map(a => monthPL(P, n, a).profit)), mxv = Math.max(...vals.map(Math.abs)) || 1;
+  const nearA = rates.reduce((a, b) => Math.abs(b - P.adr) < Math.abs(a - P.adr) ? b : a), nearN = nightsArr.reduce((a, b) => Math.abs(b - P.nights) < Math.abs(a - P.nights) ? b : a);
+  document.getElementById("t-grid").innerHTML = `<tr><th>Nights ↓ · Rate →</th>${rates.map(a => `<th class="n">${kesK(a)}</th>`).join("")}</tr>` +
+    nightsArr.map(n => `<tr><td class="n">${n}</td>${rates.map(a => { const v = monthPL(P, n, a).profit, k = Math.round(15 + 55 * Math.abs(v) / mxv);
+      return `<td class="c" style="background:color-mix(in srgb, ${v < 0 ? "var(--loss)" : "var(--gain)"} ${k}%, var(--surface));${a === nearA && n === nearN ? "outline:2px solid var(--ink);outline-offset:-2px;" : ""}">${kesK(v)}</td>`; }).join("")}</tr>`).join("");
+
+
+}
+buildInputs(); render();
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(render, 150); });
+
+</script>
+
+</body></html>
